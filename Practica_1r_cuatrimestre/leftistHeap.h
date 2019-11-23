@@ -22,30 +22,32 @@
 #ifndef _LeftistHeap_
 #define _LeftistHeap_
 
+#include <cstddef>
+
 class Node{
 
     public:
-        const int& elem() const;      // Returns the element from the node
-        const int& dist() const;      // Returns the distance from the node
-        const Node& left() const;     // Returns the left son of the node
-        const Node& right() const;    // Returns the right son of the node
-        // Constructor
-        Node(const int &e, const int d = 0, const Node *l = NULL, const Node *r = NULL){
-            this->elem = e;
-            this->dist = d;
-            this->left = l;
-            this->right = r;
+        int elem();             // Returns the element from the node
+        int dist();             // Returns the distance from the node
+        Node* left();           // Returns the left son of the node
+        Node* right();          // Returns the right son of the node
+        void dist(int d);       // Sets the new value for _dist to the given int
+        void left(Node* l);     // Sets the new value for the left child
+        void right(Node* r);    // Sets the new value for the right child
+        Node(const int &e){     // Constructor
+            this->_elem = e;
+            this->_dist = 0;
+            this->_left = NULL;
+            this->_right = NULL;
         }
     
     private:
-        int elem;
-        int dist;
-        Node * left;
-        Node * right;
+        int _elem;
+        int _dist;
+        Node *_left;
+        Node *_right;
 
-}
-
-
+};
 
 class LeftistHeap{
 
@@ -54,21 +56,19 @@ class LeftistHeap{
         LeftistHeap(LeftistHeap &heap);     // Constructor by copy
         int getMin();                       // Returns the smallest element in the heap (root)
         void deleteMin();                   //  Removes the smallest element in the heap
-        // void deleteMin(int &minElem);       // Removes the smallest element in the heap and returns it
+        void deleteMin(int &minElem);       // Removes the smallest element in the heap and returns it, used instead getMin() followed by deleteMin()
         void insert(int &elem);             // Inserts the given element into the heap
         void merge(LeftistHeap &b);         // Merges the existing heap with the given one
         bool isEmpty();                     // Tests if the heap is empty
         void emptyHeap();                   // Empties the heap
-        // operator &
 
     private:
-        Node *root;
-        Node *mergeHeaps(Node *heap1, Node *heap2);         // Merges both heaps, returning the root to the resulting heap
-        Node *MergeRecursive(Node *heap1, Node *heap2);     // Called by mergeHeaps() recursively
-        void swapChildren(Node *parent);
-        // reclaimMemory
-        // clone
+        Node *_root;
+        Node* mergeHeaps(Node *heap1, Node *heap2);         // Merges both heaps, returning the root to the resulting heap
+        Node* MergeRecursive(Node *heap1, Node *heap2);     // Called by mergeHeaps() recursively
+        void swapChildren(Node *parent);                    // Swaps the right and left childs of the given node
+        void clearMem(Node *node);                          // Clears the dinamically allocated memory of the heap
 
-}
+};
 
 #endif
