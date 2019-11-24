@@ -8,8 +8,8 @@
     Node Info:
         - element
         - distance
-        - left son
-        - right son
+        - left child
+        - right child
 
     Operations:
         - merge() is the main operation, called by deleteMin(), getMin() an d insert()
@@ -55,7 +55,7 @@ class LeftistHeap{
         LeftistHeap();                      // Constructor
         LeftistHeap(LeftistHeap &heap);     // Constructor by copy
         int getMin();                       // Returns the smallest element in the heap (root)
-        void deleteMin();                   //  Removes the smallest element in the heap
+        void deleteMin();                   // Removes the smallest element in the heap
         void deleteMin(int &minElem);       // Removes the smallest element in the heap and returns it, used instead getMin() followed by deleteMin()
         void insert(int &elem);             // Inserts the given element into the heap
         void merge(LeftistHeap &b);         // Merges the existing heap with the given one
