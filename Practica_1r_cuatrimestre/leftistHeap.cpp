@@ -4,13 +4,13 @@ using namespace std;
 
 // Node Methods
 
-int Node::elem() { return _elem; }
-int Node::dist() { return _dist; }
-Node* Node::left() { return _left; }
-Node* Node::right() { return _right; }
-void Node::dist(int d) { _dist = d; }
-void Node::left(Node* l) { _left = l; }
-void Node::right(Node* r) { _right = r; }
+    int Node::elem() { return _elem; }
+    int Node::dist() { return _dist; }
+    Node* Node::left() { return _left; }
+    Node* Node::right() { return _right; }
+    void Node::dist(int d) { _dist = d; }
+    void Node::left(Node* l) { _left = l; }
+    void Node::right(Node* r) { _right = r; }
 
 
 // LeftistHeap Methods
