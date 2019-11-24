@@ -36,6 +36,10 @@ int main() {
     g1.addEdge(0, 1, 3);
     g1.addEdge(0, 2, 5);
     g1.addEdge(2, 1, 2);
+    g1.addEdge(0, 3, 1);
+    g1.addEdge(3, 4, 7);
+    g1.addEdge(4, 5, 6);
+    g1.addEdge(1, 5, 3);
     g1.printGraph();
   
     return 0; 

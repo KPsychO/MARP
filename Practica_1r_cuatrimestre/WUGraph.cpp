@@ -35,9 +35,9 @@
         else {
             VertexNode* iter = _head;
             EdgeNode* aux = NULL;
-            bool bsrc, bdst = 0;
+            bool bsrc = 0;
+            bool bdst = 0;
             while (iter && (!bsrc || !bdst)){
-                std::cout << "bsrc: " << bsrc << " bdst: " << bdst << '\n';
                 if (iter->_elem == src){
                     aux = iter->_edges;
                     iter->_edges = new EdgeNode(src, dst, weight, aux);
@@ -51,14 +51,12 @@
                 iter = iter->_next;
             }
             if (!bsrc){
-                std::cout << "src" << '\n';
                 VertexNode* aux = _head->_next;
                 EdgeNode* edges = new EdgeNode(src, dst, weight, NULL);
                 _head->_next = new VertexNode(src, aux, edges);
                 _nVertex++;
             }
             if (!bdst){
-                std::cout << "dst" << '\n';
                 VertexNode* aux = _head->_next;
                 EdgeNode* edges = new EdgeNode(dst, src, weight, NULL);
                 _head->_next = new VertexNode(dst, aux, edges);
