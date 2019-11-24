@@ -13,6 +13,7 @@
 
     VertexNode::VertexNode(int elem, VertexNode* next, EdgeNode* edges){
         _elem = elem;
+        _visited = 0;
         _next = next;
         _edges = edges;
     }

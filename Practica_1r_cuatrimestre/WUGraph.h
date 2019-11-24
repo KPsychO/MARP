@@ -4,6 +4,11 @@
 #include <iostream>
 #include <cstddef>
 
+/*
+    Implementation of a Weighted Undirected Graph using Linked lists.
+    Each vertex is represented by
+*/
+
 class EdgeNode {   // Edges
 
     public:
@@ -19,6 +24,7 @@ class VertexNode {   // Adyacency list (linked list)
 
     public:
         int _elem;
+        bool _visited;
         VertexNode* _next;
         EdgeNode* _edges;
         VertexNode(int elem, VertexNode* next, EdgeNode* edges);
