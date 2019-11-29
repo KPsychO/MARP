@@ -25,6 +25,7 @@
 #include <cstddef>
 #include <unordered_map>
 #include <iostream>
+#include <algorithm>
 
 class Node{
 
@@ -37,24 +38,15 @@ class Node{
         void dist(int d);       // Sets the new value for _dist to the given int
         void left(Node* l);     // Sets the new value for the left child
         void right(Node* r);    // Sets the new value for the right child
-        Node(const int &e){     // Constructor
-            this->_elem = e;
-            this->_dist = 0;
-            this->_left = NULL;
-            this->_right = NULL;
-        }
-        Node(int e, int d, Node* l, Node* r){     // Constructor
-            this->_elem = e;
-            this->_dist = d;
-            this->_left = l;
-            this->_right = r;
-        }
-    
+        Node(const int &e);     // Constructor
+        Node(int e, int d, Node* l, Node* r);   // Constructor
+
     private:
         int _elem;
         int _dist;
-        Node *_left;
-        Node *_right;
+        Node* _parent;
+        Node* _left;
+        Node* _right;
 
 };
 
@@ -72,16 +64,19 @@ class LeftistHeap{
         void emptyHeap();                   // Empties the heap
         void printHeap();                   // Prints all the elements of the heap in decreasing order (intended use: debbugin purposes -> O(N logN))
         LeftistHeap& operator =(LeftistHeap &h);    // Deep copy of a LeftistHeap
-        Node* root();
+//        Node* root();
+        std::unordered_map<int, Node*>* map();
 
     private:
-        Node *_root;
-        std::unordered_map<int, Node*> _map;
+        Node *_root;                                        // Root of the heap (also minimum element)
+        std::unordered_map<int, Node*>* _map;
         Node* mergeHeaps(Node *heap1, Node *heap2);         // Merges both heaps, returning the root to the resulting heap
         Node* MergeRecursive(Node *heap1, Node *heap2);     // Called by mergeHeaps() recursively
         void swapChildren(Node *parent);                    // Swaps the right and left childs of the given node
         void clearMem(Node *node);                          // Clears the dinamically allocated memory of the heap
-        Node* cloneNode(Node *node);                 // Deep copy of a node
+        Node* cloneNode(Node *node);                 		// Deep copy of a node
+        LeftistHeap(Node* newRoot, std::unordered_map<int, Node*>* newMap);         // Constructor by copy
+
 
 };
 

@@ -10,15 +10,36 @@
     void Node::dist(int d) { _dist = d; }
     void Node::left(Node* l) { _left = l; }
     void Node::right(Node* r) { _right = r; }
+    Node::Node(const int &e) {
+        this->_elem = e;
+        this->_dist = 0;
+        this->_parent = NULL;
+        this->_left = NULL;
+        this->_right = NULL;
+        
+    }
+
+    Node::Node(int e, int d, Node* parent, Node* l, Node* r){
+        this->_elem = e;
+        this->_dist = d;
+        this->_parent = parent;
+        this->_left = l;
+        this->_right = r;
+    }
 
 
 // LeftistHeap Methods
 
     // Public methods
 
-    LeftistHeap::LeftistHeap(){
+    LeftistHeap::LeftistHeap() {
         _root = NULL;
-        _map.clear();
+        _map = new std::unordered_map<int, Node*>;
+    }
+
+    LeftistHeap::LeftistHeap(Node* newRoot, std::unordered_map<int, Node*>* newMap){
+    	_root = newRoot;
+    	_map = newMap;
     }
 
     int LeftistHeap::getMin(){
@@ -26,7 +47,7 @@
     }
 
     void LeftistHeap::deleteMin(){
-        _map.erase(_root->elem());
+        _map->erase(_root->elem());
         Node *aux = _root;
         _root = mergeHeaps(_root->left(), _root->right());
         delete aux;
@@ -38,24 +59,28 @@
     }
 
     void LeftistHeap::insert(int elem){
-        if (_map.find(elem) != _map.end()) {
+        if (_map->find(elem) != _map->end()) {
             std::cout << elem << " already exists in the heap.\n";
             return;
         }
         Node* newElem = new Node(elem);
-        _map[elem] = newElem;
+        _map->insert(std::make_pair(elem, newElem));
         _root = mergeHeaps(_root, newElem);
     }
 
     void LeftistHeap::decreaseKey(int oldKey, int newKey){
-        std::unordered_map<int, Node*>::iterator iter = _map.find(oldKey);
-        if (iter != _map.end()){
-            Node* aux = new Node(iter->second->elem(), iter->second->dist(), iter->second->left(), iter->second->right());
-            aux->elem(newKey);
-            // delte the pointer IN THE FUCKING HEAP
-            _map.erase(oldKey);
-            _map[newKey] = aux;
-            _root = mergeHeaps(_root, aux);
+        std::unordered_map<int, Node*>::iterator iter = _map->find(oldKey);
+        if (iter != _map->end()){
+            Node* aux = new Node(newKey, iter->second->dist(), iter->second->left(), iter->second->right());
+            LeftistHeap newHeap(aux, map());
+            _map->insert(std::make_pair(newKey, aux));
+            iter->second->left(nullptr);
+            iter->second->right(nullptr);
+            iter->second->elem(9999);
+//            delete iter->second;
+//            iter->second = nullptr;
+            _root = mergeHeaps(_root, newHeap._root);
+            _map->erase(oldKey);
         }
         else {
             std::cout << oldKey << " not found in the map.\n";
@@ -75,7 +100,7 @@
     void LeftistHeap::emptyHeap(){
         clearMem(_root);
         _root = NULL;
-        _map.empty();
+        _map->empty();
     }
 
     void LeftistHeap::printHeap(){
@@ -92,12 +117,14 @@
     LeftistHeap& LeftistHeap::operator =(LeftistHeap &h){
         if (this != &h){
             emptyHeap();
-            _root = cloneNode(h.root());
+            _root = cloneNode(h._root);
         }
         return *this;
     }
 
-    Node* LeftistHeap::root() { return _root; }
+//    Node* LeftistHeap::root() { return _root; }
+
+    std::unordered_map<int, Node*>* LeftistHeap::map() { return _map; }
 
     // Private methods
 

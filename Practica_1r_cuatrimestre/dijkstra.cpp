@@ -7,7 +7,7 @@ int main() {
     // Checker for leftistHeap use, seems to work, missing decreaseKey()
     LeftistHeap h; 
     LeftistHeap h1;
-    int x; 
+    // int x; 
   
     h.insert(13); 
     h.insert(30); 
@@ -36,7 +36,7 @@ int main() {
     h.printHeap();
     // h1.printHeap();
 
-    h.decreaseKey(98, 1);
+    h.decreaseKey(43, 1);
     // h1.decreaseKey(23, 3);
 
     h.printHeap();
@@ -50,6 +50,8 @@ int main() {
     // g1.addEdge(3, 4, 7);
     // g1.addEdge(4, 5, 6);
     // g1.addEdge(1, 5, 3);
+    // g1.addEdge(8, 9, 6);
+    // g1.addEdge(23, 45, 3);
     // g1.printGraph();
   
     return 0; 
