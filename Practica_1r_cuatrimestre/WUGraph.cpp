@@ -23,44 +23,38 @@
     WUGraph::WUGraph() {
         _head = NULL;
         _nVertex = 0;
+        _map = new std::unordered_map<int, VertexNode*>;
     }
 
     void WUGraph::addEdge (int src, int dst, int weight) {
         if (_head == NULL) {
-            EdgeNode* edge1 = new EdgeNode(src, dst, weight, NULL);
-            EdgeNode* edge2 = new EdgeNode(dst, src, weight,  NULL);
-            VertexNode* aux = new VertexNode(dst, NULL, edge2);;
-            _head = new VertexNode(src, aux, edge1);
-            _nVertex += 2;
+            EdgeNode* edge1 = new EdgeNode(src, dst, weight, NULL);     // Creamos la arista src -> dst
+            VertexNode* aux = new VertexNode(dst, NULL, NULL);          // Creamos el vertice dst
+            _head = new VertexNode(src, aux, edge1);                    // Creamos el vertice src y lo asignamos a _head
+            _map->insert(std::make_pair(src, _head));
+            _map->insert(std::make_pair(dst, aux));
+            _nVertex += 2;                                              // Aumentamos el # de vertices
         }
         else {
-            VertexNode* iter = _head;
             EdgeNode* aux = NULL;
-            bool bsrc = 0;
-            bool bdst = 0;
-            while (iter && (!bsrc || !bdst)){
-                if (iter->_elem == src){
-                    aux = iter->_edges;
-                    iter->_edges = new EdgeNode(src, dst, weight, aux);
-                    bsrc = 1;
-                }
-                if(iter->_elem == dst){
-                    aux = iter->_edges;
-                    iter->_edges = new EdgeNode(dst, src, weight, aux);
-                    bdst = 1;
-                }
-                iter = iter->_next;
+            VertexNode* vAux = NULL;
+            std::unordered_map<int, VertexNode*>::iterator iter = _map->find(src);
+            if(iter != _map->end()){
+                aux = iter->second->_edges;
+                iter->second->_edges = new EdgeNode(src, dst, weight, aux);
             }
-            if (!bsrc){
-                VertexNode* aux = _head->_next;
-                EdgeNode* edges = new EdgeNode(src, dst, weight, NULL);
-                _head->_next = new VertexNode(src, aux, edges);
+            else {
+                EdgeNode* eAux = new EdgeNode(src, dst, weight, NULL);
+                vAux = _head;
+                _head = new VertexNode(src, vAux, eAux);
+                _map->insert(std::make_pair(src, _head));
                 _nVertex++;
             }
-            if (!bdst){
-                VertexNode* aux = _head->_next;
-                EdgeNode* edges = new EdgeNode(dst, src, weight, NULL);
-                _head->_next = new VertexNode(dst, aux, edges);
+            iter = _map->find(dst);
+            if (iter == _map->end()){
+                vAux = _head;
+                _head = new VertexNode(dst, vAux, NULL);
+                _map->insert(std::make_pair(dst, _head));
                 _nVertex++;
             }
         }

@@ -3,6 +3,7 @@
 
 #include <iostream>
 #include <cstddef>
+#include <unordered_map>
 
 /*
     Implementation of a Weighted Undirected Graph using Linked lists.
@@ -49,6 +50,7 @@ class WUGraph {
     public:
         VertexNode* _head;
         int _nVertex;
+        std::unordered_map<int, VertexNode*>* _map;
         void addEdge (int src, int dst, int weight);    // Adds an EdgeNode from src to dst with the given weight
         void printGraph();                              // Prints the adyacency list for the graph
         WUGraph();                                      // Constructor

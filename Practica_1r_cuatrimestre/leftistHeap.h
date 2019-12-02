@@ -44,7 +44,7 @@ class Node{
     private:
         int _elem;
         int _dist;
-        Node* _parent;
+        // Node* _parent;
         Node* _left;
         Node* _right;
 
