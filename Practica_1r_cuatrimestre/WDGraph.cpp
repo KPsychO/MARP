@@ -1,4 +1,4 @@
-#include "WUGraph.h"
+#include "WDGraph.h"
 
 // EdgeNode methods
 
