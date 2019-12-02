@@ -1,13 +1,11 @@
 #include <iostream>
 #include "leftistHeap.h"
-#include "WUGraph.h"
+#include "WDGraph.h"
 
 int main() { 
 
-    // Checker for leftistHeap use, seems to work, missing decreaseKey()
     // LeftistHeap h; 
     // LeftistHeap h1;
-    // // int x; 
   
     // h.insert(13); 
     // h.insert(30); 
@@ -34,25 +32,25 @@ int main() {
   
 
     // h.printHeap();
-    // // h1.printHeap();
+    // h1.printHeap();
 
-    // h.decreaseKey(43, 1);
-    // // h1.decreaseKey(23, 3);
+    // h.decreaseKey(43, 16);
+    // h1.decreaseKey(23, 78);
 
     // h.printHeap();
-    // // h1.printHeap();   
+    // h1.printHeap();   
 
-    WUGraph g1;
-    g1.addEdge(0, 1, 3);
-    g1.addEdge(0, 2, 5);
-    g1.addEdge(2, 1, 2);
-    g1.addEdge(0, 3, 1);
-    g1.addEdge(3, 4, 7);
-    g1.addEdge(4, 5, 6);
-    g1.addEdge(1, 5, 3);
-    g1.addEdge(8, 9, 6);
-    g1.addEdge(23, 45, 3);
-    g1.printGraph();
+    // WUGraph g1;
+    // g1.addEdge(0, 1, 3);
+    // g1.addEdge(0, 2, 5);
+    // g1.addEdge(2, 1, 2);
+    // g1.addEdge(0, 3, 1);
+    // g1.addEdge(3, 4, 7);
+    // g1.addEdge(4, 5, 6);
+    // g1.addEdge(1, 5, 3);
+    // g1.addEdge(8, 9, 6);
+    // g1.addEdge(23, 45, 3);
+    // g1.printGraph();
   
     return 0; 
 } 
