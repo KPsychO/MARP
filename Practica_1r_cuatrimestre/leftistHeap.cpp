@@ -71,6 +71,10 @@
     }
 
     void LeftistHeap::decreaseKey(int oldKey, int newKey){
+        if (oldKey < newKey) {
+            std::cout << "LeftistHeap::decreaseKey(int oldKey, int newKey): Received a newKey bigger than the original key.\n";
+            return;
+        }
         std::unordered_map<int, Node*>::iterator iter = _map->find(oldKey);
         if (iter != _map->end()){
             Node* aux = new Node(newKey, iter->second->dist(), iter->second->parent(), iter->second->left(), iter->second->right());
@@ -123,8 +127,6 @@
         }
         return *this;
     }
-
-//    Node* LeftistHeap::root() { return _root; }
 
     std::unordered_map<int, Node*>* LeftistHeap::map() { return _map; }
 

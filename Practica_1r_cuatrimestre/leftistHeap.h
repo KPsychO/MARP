@@ -55,16 +55,16 @@ class Node{
 class LeftistHeap{
 
     public:
-        LeftistHeap();                      // Constructor
-        int getMin();                       // Returns the smallest element in the heap (root)
-        void deleteMin();                   // Removes the smallest element in the heap
-        void deleteMin(int &minElem);       // Removes the smallest element in the heap and returns it, used instead getMin() followed by deleteMin()
-        void insert(int elem);             // Inserts the given element into the heap
-        void decreaseKey(int oldKey, int newKey);    // Modifies the value of the given oldKey into the newKey
-        void merge(LeftistHeap &b);         // Merges the existing heap with the given one
-        bool isEmpty();                     // Tests if the heap is empty
-        void emptyHeap();                   // Empties the heap
-        void printHeap();                   // Prints all the elements of the heap in decreasing order (intended use: debbugin purposes -> O(N logN))
+        LeftistHeap();                              // Constructor
+        int getMin();                               // Returns the smallest element in the heap (root)
+        void deleteMin();                           // Removes the smallest element in the heap
+        void deleteMin(int &minElem);               // Removes the smallest element in the heap and returns it, used instead getMin() followed by deleteMin()
+        void insert(int elem);                      // Inserts the given element into the heap
+        void decreaseKey(int oldKey, int newKey);   // Modifies the value of the given oldKey into the newKey
+        void merge(LeftistHeap &b);                 // Merges the existing heap with the given one
+        bool isEmpty();                             // Tests if the heap is empty
+        void emptyHeap();                           // Empties the heap
+        void printHeap();                           // Prints all the elements of the heap in decreasing order (intended use: debbugin purposes -> O(N logN))
         LeftistHeap& operator =(LeftistHeap &h);    // Deep copy of a LeftistHeap
         std::unordered_map<int, Node*>* map();
 
@@ -77,7 +77,6 @@ class LeftistHeap{
         void clearMem(Node *node);                          // Clears the dinamically allocated memory of the heap
         Node* cloneNode(Node *node);                 		// Deep copy of a node
         LeftistHeap(Node* newRoot, std::unordered_map<int, Node*>* newMap);         // Constructor by copy
-
 
 };
 
