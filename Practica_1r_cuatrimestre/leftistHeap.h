@@ -32,19 +32,21 @@ class Node{
     public:
         int elem();             // Returns the element from the node
         int dist();             // Returns the distance from the node
+        Node* parent();			// Returns the parent of the node
         Node* left();           // Returns the left son of the node
         Node* right();          // Returns the right son of the node
         void elem(int e);       // Sets the new value for _elem to the given int
         void dist(int d);       // Sets the new value for _dist to the given int
+        void parent(Node* p);	// Sets the new value for the parent
         void left(Node* l);     // Sets the new value for the left child
         void right(Node* r);    // Sets the new value for the right child
-        Node(const int &e);     // Constructor
-        Node(int e, int d, Node* l, Node* r);   // Constructor
+        Node(const int& e);     // Constructor
+        Node(int e, int d, Node* p, Node* l, Node* r);   // Constructor
 
     private:
         int _elem;
         int _dist;
-        // Node* _parent;
+        Node* _parent;
         Node* _left;
         Node* _right;
 
@@ -64,7 +66,6 @@ class LeftistHeap{
         void emptyHeap();                   // Empties the heap
         void printHeap();                   // Prints all the elements of the heap in decreasing order (intended use: debbugin purposes -> O(N logN))
         LeftistHeap& operator =(LeftistHeap &h);    // Deep copy of a LeftistHeap
-//        Node* root();
         std::unordered_map<int, Node*>* map();
 
     private:

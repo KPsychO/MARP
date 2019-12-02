@@ -4,10 +4,12 @@
 
     int Node::elem() { return _elem; }
     int Node::dist() { return _dist; }
+    Node* Node::parent() { return _parent; }
     Node* Node::left() { return _left; }
     Node* Node::right() { return _right; }
     void Node::elem(int e) { _elem = e; }
     void Node::dist(int d) { _dist = d; }
+    void Node::parent(Node* p) { _parent = p; }
     void Node::left(Node* l) { _left = l; }
     void Node::right(Node* r) { _right = r; }
     Node::Node(const int &e) {
@@ -16,7 +18,7 @@
         this->_parent = NULL;
         this->_left = NULL;
         this->_right = NULL;
-        
+
     }
 
     Node::Node(int e, int d, Node* parent, Node* l, Node* r){
@@ -71,16 +73,16 @@
     void LeftistHeap::decreaseKey(int oldKey, int newKey){
         std::unordered_map<int, Node*>::iterator iter = _map->find(oldKey);
         if (iter != _map->end()){
-            Node* aux = new Node(newKey, iter->second->dist(), iter->second->left(), iter->second->right());
-            LeftistHeap newHeap(aux, map());
-            _map->insert(std::make_pair(newKey, aux));
-            iter->second->left(nullptr);
-            iter->second->right(nullptr);
-            iter->second->elem(9999);
-//            delete iter->second;
-//            iter->second = nullptr;
-            _root = mergeHeaps(_root, newHeap._root);
+            Node* aux = new Node(newKey, iter->second->dist(), iter->second->parent(), iter->second->left(), iter->second->right());
+            if(aux->parent()->left()->elem() == oldKey)
+            	aux->parent()->left(NULL);
+            else
+            	aux->parent()->right(NULL);
+            aux->parent(NULL);
+            aux->elem(newKey);
+            _root = mergeHeaps(_root, aux);
             _map->erase(oldKey);
+            _map->insert(std::make_pair(newKey, aux));
         }
         else {
             std::cout << oldKey << " not found in the map.\n";
@@ -131,14 +133,18 @@
     Node* LeftistHeap::mergeHeaps(Node *heap1, Node *heap2){
         if (heap1 == NULL) return heap2;
         if (heap2 == NULL) return heap1;
-        if(heap1->elem() < heap2->elem()) return MergeRecursive(heap1, heap2); // Ensures heap1 has the sammlest root
+        if(heap1->elem() < heap2->elem()) return MergeRecursive(heap1, heap2); // Ensures heap1 has the smallest root
         return MergeRecursive(heap2, heap1);
     }
 
     Node* LeftistHeap::MergeRecursive(Node *heap1, Node *heap2){
-        if(heap1->left() == NULL) heap1->left(heap2);
+        if(heap1->left() == NULL) {
+        	heap1->left(heap2);
+        	heap2->parent(heap1);
+        }
         else {
             heap1->right(mergeHeaps(heap1->right(), heap2));
+            heap1->right()->parent(heap1);
             if (heap1->left()->dist() < heap1->right()->dist()) swapChildren(heap1);
             heap1->dist(heap1->right()->dist() + 1);
         }
@@ -161,5 +167,5 @@
 
     Node* LeftistHeap::cloneNode(Node* node){
         if (node == NULL) return NULL;
-        return new Node (node->elem(), node->dist(), cloneNode(node->left()), cloneNode(node->right()));
+        return new Node (node->elem(), node->dist(), node->parent(), cloneNode(node->left()), cloneNode(node->right()));
     }
