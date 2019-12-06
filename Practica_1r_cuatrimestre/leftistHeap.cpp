@@ -2,26 +2,26 @@
 
 // Node Methods
 
-    int Node::elem() { return _elem; }
+    std::pair<float, int> Node::elem() { return _elem; }
     int Node::dist() { return _dist; }
     Node* Node::parent() { return _parent; }
     Node* Node::left() { return _left; }
     Node* Node::right() { return _right; }
-    void Node::elem(int e) { _elem = e; }
+    void Node::elem(float e) { _elem.first = e; }
+    void Node::extra(int e) { _elem.second = e; }
     void Node::dist(int d) { _dist = d; }
     void Node::parent(Node* p) { _parent = p; }
     void Node::left(Node* l) { _left = l; }
     void Node::right(Node* r) { _right = r; }
-    Node::Node(const int &e) {
+    Node::Node(std::pair<float, int> e) {
         this->_elem = e;
         this->_dist = 0;
         this->_parent = NULL;
         this->_left = NULL;
         this->_right = NULL;
-
     }
 
-    Node::Node(int e, int d, Node* parent, Node* l, Node* r){
+    Node::Node(std::pair<float, int> e, int d, Node* parent, Node* l, Node* r){
         this->_elem = e;
         this->_dist = d;
         this->_parent = parent;
@@ -45,51 +45,47 @@
     }
 
     int LeftistHeap::getMin(){
-        return _root->elem();
+        return _root->elem().first;
     }
 
     void LeftistHeap::deleteMin(){
-        _map->erase(_root->elem());
+        _map->erase(_root->elem().first);
         Node *aux = _root;
         _root = mergeHeaps(_root->left(), _root->right());
         delete aux;
     }
 
-    void LeftistHeap::deleteMin(int &minElem){
-        minElem = _root->elem();
+    void LeftistHeap::deleteMin(std::pair<float, int> &minElem){
+        minElem = _root->elem().first;
         deleteMin();
     }
 
-    void LeftistHeap::insert(int elem){
-        if (_map->find(elem) != _map->end()) {
-            std::cout << elem << " already exists in the heap.\n";
+    void LeftistHeap::insert(std::pair<int, int> elem){
+        if (_map->find(elem.second) != _map->end()) {
+            std::cout << elem.second << " already exists in the heap.\n";
             return;
         }
         Node* newElem = new Node(elem);
-        _map->insert(std::make_pair(elem, newElem));
+        _map->insert(std::make_pair(elem.second, newElem));
         _root = mergeHeaps(_root, newElem);
     }
 
-    void LeftistHeap::decreaseKey(int oldKey, int newKey){
-        if (oldKey < newKey) {
-            std::cout << "LeftistHeap::decreaseKey(int oldKey, int newKey): Received a newKey bigger than the original key.\n";
-            return;
-        }
-        std::unordered_map<int, Node*>::iterator iter = _map->find(oldKey);
+    void LeftistHeap::decreaseKey(int elem, int newDist){
+        std::unordered_map<int, Node*>::iterator iter = _map->find(elem);
         if (iter != _map->end()){
-            Node* aux = new Node(newKey, iter->second->dist(), iter->second->parent(), iter->second->left(), iter->second->right());
-            if(aux->parent()->left()->elem() == oldKey)
+            Node* aux = new Node(std::make_pair(newDist, iter->second->elem().second), iter->second->dist(), iter->second->parent(), iter->second->left(), iter->second->right());
+            if(aux->parent()->left()->elem().first == elem)
             	aux->parent()->left(NULL);
             else
             	aux->parent()->right(NULL);
             aux->parent(NULL);
-            aux->elem(newKey);
+            aux->elem(newDist);
             _root = mergeHeaps(_root, aux);
-            _map->erase(oldKey);
-            _map->insert(std::make_pair(newKey, aux));
+            _map->erase(elem);
+        _map->insert(std::make_pair(newDisst, aux));
         }
         else {
-            std::cout << oldKey << " not found in the map.\n";
+            std::cout << elem << " not found in the map.\n";
         }
     }
 
@@ -135,7 +131,7 @@
     Node* LeftistHeap::mergeHeaps(Node *heap1, Node *heap2){
         if (heap1 == NULL) return heap2;
         if (heap2 == NULL) return heap1;
-        if(heap1->elem() < heap2->elem()) return MergeRecursive(heap1, heap2); // Ensures heap1 has the smallest root
+        if(heap1->elem().first < heap2->elem().first) return MergeRecursive(heap1, heap2); // Ensures heap1 has the smallest root
         return MergeRecursive(heap2, heap1);
     }
 

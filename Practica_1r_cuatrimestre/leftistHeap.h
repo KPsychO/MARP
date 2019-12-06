@@ -8,6 +8,7 @@
     Node Info:
         - element
         - distance
+        - parent
         - left child
         - right child
 
@@ -30,21 +31,22 @@
 class Node{
 
     public:
-        int elem();             // Returns the element from the node
+        std::pair<float, int> elem();         // Returns the element from the node
         int dist();             // Returns the distance from the node
         Node* parent();			// Returns the parent of the node
         Node* left();           // Returns the left son of the node
         Node* right();          // Returns the right son of the node
-        void elem(int e);       // Sets the new value for _elem to the given int
+        void elem(float e);     // Sets the new value for _elem to the given int
+        void extra(int e);
         void dist(int d);       // Sets the new value for _dist to the given int
         void parent(Node* p);	// Sets the new value for the parent
         void left(Node* l);     // Sets the new value for the left child
         void right(Node* r);    // Sets the new value for the right child
-        Node(const int& e);     // Constructor
-        Node(int e, int d, Node* p, Node* l, Node* r);   // Constructor
+        Node(std::pair<float, int> e);     // Constructor
+        Node(std::pair<float, int> e, int d, Node* p, Node* l, Node* r);   // Constructor
 
     private:
-        int _elem;
+        std::pair<float, int> _elem;
         int _dist;
         Node* _parent;
         Node* _left;
@@ -53,13 +55,13 @@ class Node{
 };
 
 class LeftistHeap{
-
+    
     public:
         LeftistHeap();                              // Constructor
         int getMin();                               // Returns the smallest element in the heap (root)
         void deleteMin();                           // Removes the smallest element in the heap
-        void deleteMin(int &minElem);               // Removes the smallest element in the heap and returns it, used instead getMin() followed by deleteMin()
-        void insert(int elem);                      // Inserts the given element into the heap
+        void deleteMin(pair<float, int> &minElem);  // Removes the smallest element in the heap and returns it, used instead getMin() followed by deleteMin()
+        void insert(std::pair<int, int> elem);      // Inserts the given element into the heap
         void decreaseKey(int oldKey, int newKey);   // Modifies the value of the given oldKey into the newKey
         void merge(LeftistHeap &b);                 // Merges the existing heap with the given one
         bool isEmpty();                             // Tests if the heap is empty
@@ -70,7 +72,7 @@ class LeftistHeap{
 
     private:
         Node *_root;                                        // Root of the heap (also minimum element)
-        std::unordered_map<int, Node*>* _map;
+        std::unordered_map<int, Node*>* _map;               // Map containin elem - pointer
         Node* mergeHeaps(Node *heap1, Node *heap2);         // Merges both heaps, returning the root to the resulting heap
         Node* MergeRecursive(Node *heap1, Node *heap2);     // Called by mergeHeaps() recursively
         void swapChildren(Node *parent);                    // Swaps the right and left childs of the given node
