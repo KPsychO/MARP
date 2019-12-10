@@ -96,9 +96,10 @@ void LeftistHeap::insert(std::pair<int, int> elem) {
 	_root = mergeHeaps(_root, newElem);
 }
 
-void LeftistHeap::decreaseKey(int elem, float newDist) {
+ void LeftistHeap::decreaseKey(int elem, float newDist) {
 	std::unordered_map<int, Node*>::iterator iter = _map->find(elem);
 	if (iter != _map->end()) {
+		// std::cout << elem << '\n';
 		if (iter->second == _root) {
 			_root->elem(newDist);
 		} else {
@@ -115,10 +116,10 @@ void LeftistHeap::decreaseKey(int elem, float newDist) {
 			aux->parent(NULL);
 			_root = mergeHeaps(_root, aux);
 			_map->erase(elem);
-			_map->insert(std::make_pair(newDist, aux));
+			_map->insert(std::make_pair(elem, aux));
 		}
 	} else {
-		std::cout << elem << " not found in the map.\n";
+		std::cout << elem << " not found in the map (decreaseKey).\n";
 	}
 }
 

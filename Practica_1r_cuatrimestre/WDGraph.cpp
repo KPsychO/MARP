@@ -1,10 +1,10 @@
 #include "WDGraph.h"
 
-#define INF INT_MAX;
+#define INF 10e6;
 
 // EdgeNode methods
 
-EdgeNode::EdgeNode(int src, int dst, int weight, EdgeNode *next) {
+EdgeNode::EdgeNode(int src, int dst, float weight, EdgeNode *next) {
 	_src = src;
 	_dst = dst;
 	_weight = weight;
@@ -31,7 +31,7 @@ WDGraph::WDGraph() {
 	_map = new std::unordered_map<int, VertexNode*>;
 }
 
-void WDGraph::addEdge(int src, int dst, int weight) {
+void WDGraph::addEdge(int src, int dst, float weight) {
 	if (_head == NULL) {
 		EdgeNode *edge1 = new EdgeNode(src, dst, weight, NULL); // Creamos la arista src -> dst
 		VertexNode *aux = new VertexNode(dst, NULL, NULL); // Creamos el vertice dst
@@ -80,7 +80,7 @@ void WDGraph::printGraph() {
 	}
 }
 
-void WDGraph::printGraphVertexs() {
+void WDGraph::printGraphvertices() {
 	VertexNode *vertex = _head;
 	for (int i = 0; i < _nVertex; i++) {
 		std::cout << "Vertex: " << vertex->_elem << '\n';
@@ -96,16 +96,15 @@ void WDGraph::printGraphVertexs() {
 	}
 }
 
-void WDGraph::getVertexs(VertexNode **ret) {
+void WDGraph::getvertices(std::vector<VertexNode*> &ret) {
 	VertexNode *vertex = _head;
-//	VertexNode *ret[_nVertex];
 	for (int i = 0; i < _nVertex; i++) {
-		ret[i] = vertex;
+		ret.push_back(vertex);
 		vertex = vertex->_next;
 	}
 }
 
-void WDGraph::changeVertexDistance(int e, int newDist) {
+void WDGraph::changeVertexDistance(int e, float newDist) {
 	std::unordered_map<int, VertexNode*>::iterator iter = _map->find(e);
 	if (iter != _map->end()) {
 		iter->second->_dist = newDist;
@@ -132,13 +131,13 @@ void WDGraph::visitVertex(int e) {
 	}
 }
 
-void WDGraph::getNeightbours(int e, EdgeNode** ret) {
+void WDGraph::getNeightbours(int e, std::vector<EdgeNode*> &ret) {
 	std::unordered_map<int, VertexNode*>::iterator iter = _map->find(e);
 	EdgeNode *aux;
 	if (iter != _map->end()) {
 		aux = iter->second->_edges;
 		for (int i = 0; i < iter->second->_nodesPointed; i++) {
-			ret[i] = aux;
+			ret.push_back(aux);
 			aux = aux->_next;
 		}
 	} else {
