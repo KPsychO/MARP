@@ -2,39 +2,6 @@
 
 // Node Methods
 
-std::pair<float, int> Node::elem() {
-	return _elem;
-}
-int Node::dist() {
-	return _dist;
-}
-Node* Node::parent() {
-	return _parent;
-}
-Node* Node::left() {
-	return _left;
-}
-Node* Node::right() {
-	return _right;
-}
-void Node::elem(float e) {
-	_elem.first = e;
-}
-void Node::extra(int e) {
-	_elem.second = e;
-}
-void Node::dist(int d) {
-	_dist = d;
-}
-void Node::parent(Node *p) {
-	_parent = p;
-}
-void Node::left(Node *l) {
-	_left = l;
-}
-void Node::right(Node *r) {
-	_right = r;
-}
 Node::Node(std::pair<float, int> e) {
 	this->_elem = e;
 	this->_dist = 0;
@@ -67,23 +34,28 @@ LeftistHeap::LeftistHeap(Node *newRoot,
 }
 
 int LeftistHeap::getMin() {
-	return _root->elem().first;
+	return _root->_elem.second;
 }
 
 void LeftistHeap::deleteMin() {
-	_map->erase(_root->elem().first);
-	Node *aux = _root;
-	if (_root->left() != NULL)
-		_root->left()->parent(NULL);
-	if (_root->right() != NULL)
-		_root->right()->parent(NULL);
-	_root = mergeHeaps(_root->left(), _root->right());
-	delete aux;
+//	std::cerr << "deleteMin\n";
+	if (!isEmpty()) {
+		_map->erase(_root->_elem.first);
+		Node *aux = _root;
+		if (_root->_left != NULL)
+			_root->_left->_parent = NULL;
+		if (_root->_right != NULL)
+			_root->_right->_parent = NULL;
+		_root = mergeHeaps(_root->_left, _root->_right);
+		delete aux;
+	}
 }
 
 void LeftistHeap::deleteMin(std::pair<float, int> &minElem) {
-	minElem = _root->elem();
+	// if (!this->isEmpty()) {
+	minElem = _root->_elem;
 	deleteMin();
+	// }
 }
 
 void LeftistHeap::insert(std::pair<int, int> elem) {
@@ -96,30 +68,32 @@ void LeftistHeap::insert(std::pair<int, int> elem) {
 	_root = mergeHeaps(_root, newElem);
 }
 
- void LeftistHeap::decreaseKey(int elem, float newDist) {
+void LeftistHeap::decreaseKey(int elem, float newDist) {
 	std::unordered_map<int, Node*>::iterator iter = _map->find(elem);
 	if (iter != _map->end()) {
-		// std::cout << elem << '\n';
 		if (iter->second == _root) {
-			_root->elem(newDist);
+			_root->_elem.first = newDist;
 		} else {
 			Node *aux = new Node(
-					std::make_pair(newDist, iter->second->elem().second),
-					iter->second->dist(), iter->second->parent(),
-					iter->second->left(), iter->second->right());
-			if ((aux->parent()->left()->elem().second
-					== iter->second->elem().second)) {
-				aux->parent()->left(NULL);
-				swapChildren(aux->parent());
+					std::make_pair(newDist, iter->second->_elem.second),
+					0, iter->second->_parent,
+					iter->second->_left, iter->second->_right);
+			if ((aux->_parent->_left->_elem.second == elem)) {
+				aux->_parent->_left = NULL;
+				swapChildren(aux->_parent);
 			} else
-				aux->parent()->right(NULL);
-			aux->parent(NULL);
+				aux->_parent->_right = NULL;
+			aux->_parent = NULL;
+			if (aux->_left != NULL)
+				aux->_left->_parent = aux;
+			if (aux->_right != NULL)
+				aux->_right->_parent = aux;
 			_root = mergeHeaps(_root, aux);
 			_map->erase(elem);
 			_map->insert(std::make_pair(elem, aux));
 		}
 	} else {
-		std::cout << elem << " not found in the map (decreaseKey).\n";
+		std::cout << elem << " not found in the map (decreaseKey()).\n";
 	}
 }
 
@@ -170,35 +144,36 @@ Node* LeftistHeap::mergeHeaps(Node *heap1, Node *heap2) {
 		return heap2;
 	if (heap2 == NULL)
 		return heap1;
-	if (heap1->elem().first <= heap2->elem().first)
+	if (heap1->_elem.first <= heap2->_elem.first) {
 		return MergeRecursive(heap1, heap2); // Ensures heap1 has the smallest root
+	}
 	return MergeRecursive(heap2, heap1);
 }
 
 Node* LeftistHeap::MergeRecursive(Node *heap1, Node *heap2) {
-	if (heap1->left() == NULL) {
-		heap1->left(heap2);
-		heap2->parent(heap1);
+	if (heap1->_left == NULL) {
+		heap1->_left = heap2;
+		heap2->_parent = heap1;
 	} else {
-		heap1->right(mergeHeaps(heap1->right(), heap2));
-		heap1->right()->parent(heap1);
-		if (heap1->left()->dist() < heap1->right()->dist())
+		heap1->_right = mergeHeaps(heap1->_right, heap2);
+		heap1->_right->_parent = heap1;
+		if (heap1->_left->_dist < heap1->_right->_dist)
 			swapChildren(heap1);
-		heap1->dist(heap1->right()->dist() + 1);
+		heap1->_dist = heap1->_right->_dist + 1;
 	}
 	return heap1;
 }
 
 void LeftistHeap::swapChildren(Node *parent) {
-	Node *aux = parent->right();
-	parent->right(parent->left());
-	parent->left(aux);
+	Node *aux = parent->_right;
+	parent->_right = parent->_left;
+	parent->_left = aux;
 }
 
 void LeftistHeap::clearMem(Node *node) {
 	if (node != NULL) {
-		clearMem(node->left());
-		clearMem(node->right());
+		clearMem(node->_left);
+		clearMem(node->_right);
 		delete node;
 	}
 }
@@ -206,6 +181,6 @@ void LeftistHeap::clearMem(Node *node) {
 Node* LeftistHeap::cloneNode(Node *node) {
 	if (node == NULL)
 		return NULL;
-	return new Node(node->elem(), node->dist(), node->parent(),
-			cloneNode(node->left()), cloneNode(node->right()));
+	return new Node(node->_elem, node->_dist, node->_parent,
+			cloneNode(node->_left), cloneNode(node->_right));
 }

@@ -137,7 +137,8 @@ void WDGraph::getNeightbours(int e, std::vector<EdgeNode*> &ret) {
 	if (iter != _map->end()) {
 		aux = iter->second->_edges;
 		for (int i = 0; i < iter->second->_nodesPointed; i++) {
-			ret.push_back(aux);
+			if (!getVertex(aux->_dst)->_visited)
+				ret.push_back(aux);
 			aux = aux->_next;
 		}
 	} else {
@@ -160,7 +161,7 @@ VertexNode* WDGraph::getVertex(int e) {
 	if (iter != _map->end()) {
 		return iter->second;
 	} else {
-		std::cout << e << " is not currently in the graph(getVertex).\n";
+		std::cout << e << " is not currently in the graph.\n";
 	}
 	return NULL;
 }

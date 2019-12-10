@@ -15,7 +15,6 @@ void createGraph(int MAX_VERTICES, int MAX_WEIGHT, float EDGE_CHANCE){
 
 				if (r <= EDGE_CHANCE){
 					f = static_cast <float> (rand()) / static_cast <float> (RAND_MAX);
-//				    g.addEdge(row, col, r * MAX_WEIGHT);
 					std::cout << row << ' ' << col << ' ' << f*MAX_WEIGHT << '\n';
                 }
 
@@ -27,6 +26,8 @@ void createGraph(int MAX_VERTICES, int MAX_WEIGHT, float EDGE_CHANCE){
 }
 
 int main(int argc, char **argv) {
+
+    srand(time(NULL));  
 
     if (argc != 4){
         std::cerr << "Wrong # of arguments\n";

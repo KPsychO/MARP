@@ -31,26 +31,13 @@
 class Node {
 
 public:
-	std::pair<float, int> elem();         // Returns the element from the node
-	int dist();             // Returns the distance from the node
-	Node* parent();			// Returns the parent of the node
-	Node* left();           // Returns the left son of the node
-	Node* right();          // Returns the right son of the node
-	void elem(float e);     // Sets the new value for _elem to the given int
-	void extra(int e);
-	void dist(int d);       // Sets the new value for _dist to the given int
-	void parent(Node *p);	// Sets the new value for the parent
-	void left(Node *l);     // Sets the new value for the left child
-	void right(Node *r);    // Sets the new value for the right child
-	Node(std::pair<float, int> e);     // Constructor
-	Node(std::pair<float, int> e, int d, Node *p, Node *l, Node *r); // Constructor
-
-private:
 	std::pair<float, int> _elem;
 	int _dist;
 	Node *_parent;
 	Node *_left;
 	Node *_right;
+	Node(std::pair<float, int> e);     // Constructor
+	Node(std::pair<float, int> e, int d, Node *p, Node *l, Node *r); // Constructor
 
 };
 
