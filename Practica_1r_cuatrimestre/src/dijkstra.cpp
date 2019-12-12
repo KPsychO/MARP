@@ -25,7 +25,7 @@ int main(int argc, char **argv) {
     std::cerr << "Generating a graph with: " << '\n';
     std::cerr << "     " << argv[1] << " N_VERTICES\n";
     std::cerr << "     " << argv[2] << " MAX_WEIGHT\n";
-    std::cerr << "     " << argv[3] << " EDGE_CHANCE\n";
+    std::cerr << "     " << std::stod(argv[3])*100 << "% EDGE_CHANCE\n";
 	std::cerr << "-------------------------\n";
 	// readGraph(g);		// Descomentar para leer el grafo (./dijkstra < inputFile)
     createGraph(std::stoi(argv[1]), std::stoi(argv[2]), std::stod(argv[3]));	// Comentar si se desea leer el grafo en lugar de generarlo
@@ -43,21 +43,33 @@ void dijkstra(WDGraph g, int src) {
 	VertexNode *minElemVertex;
 	vertices.clear();
 	g.getvertices(vertices);
+	// Modificamos la distancia del nodo de inicio a 0
 	g.changeVertexDistance(src, 0);
+	// Insertamos todos los vertices en el monticulo, tienen distancia INF, no estan visitados y no tienen nodo previo
 	for (int i = 0; i < g._nVertex; i++)
 		h.insert(std::make_pair(vertices[i]->_dist, vertices[i]->_elem));
+	// Mientras el monticulo no este vacio, operamos de la siguiente manera
 	while (!h.isEmpty()) {
+		// Extraemos el minimo elemento y conseguimos acceso a su nodo mediante el la funcion getVertex(), tambien eliminamos dicho elemento del monticulo ya que ya ha sido visitado
 		h.deleteMin(minElem);
 		minElemVertex = g.getVertex(minElem.second);
+		// Si el nodo visitado tiene una distancia distinta a INF, implica que ha sido visitado por el algoritmo
 		if (minElemVertex->_dist != INF)
 			g.visitVertex(minElem.second);
 		EdgesToNeightbours.clear();
+		// Extraemos la lista de adyacencia del vertice a tratar en esta iteraccion
 		g.getNeightbours(minElemVertex->_elem, EdgesToNeightbours);
 		for (long unsigned int i = 0; i < EdgesToNeightbours.size(); i++) {
+			// Para cada vecino al vertice a tratar comprobamos que no haya sido visitado (y eliminado del monticulo) y si la distancia desde le nodo actual mejora la distancia obtenida por el camino anterior
 			if (!(g.getVertex(EdgesToNeightbours[i]->_dst)->_visited) 
 				&& (minElemVertex->_dist + EdgesToNeightbours[i]->_weight < g.getVertex(EdgesToNeightbours[i]->_dst)->_dist)) {
+				// Modificamos la distancia de llegada al vecino a traves de su padre
 				g.changeVertexDistance(EdgesToNeightbours[i]->_dst, minElemVertex->_dist + EdgesToNeightbours[i]->_weight);
+				// Indicamos al vecino que el vertice actual es su padre en el camino minimo
 				g.getVertex(EdgesToNeightbours[i]->_dst)->_parentOnMinPath = minElemVertex;
+				// Decrecemos la  clave de dicho vecino a su nuevo valor en el monticulo
+				// Cabe destacar que esta funcion es un tanto extrana, ya que recibe el ELEMENTO del vertice para modificar su DISTANCIA, esta funcionalidad ha sido implementada
+				// 		en la funcion decrecerClave() en el archivo leftistHeap.cpp. Dicho monticulo contiene un mapa que relaciona elemento - puntero al nodo correspondiente. 
 				h.decreaseKey(g.getVertex(EdgesToNeightbours[i]->_dst)->_elem, g.getVertex(EdgesToNeightbours[i]->_dst)->_dist);
 			}
 		}
@@ -74,10 +86,8 @@ void readGraph(WDGraph &g) {
 }
 
 void createGraph(int N_VERTICES, int MAX_WEIGHT, float EDGE_CHANCE){
-
 	float r;
     float f;
-
     for (int row = 0; row < N_VERTICES; row++){
 		for (int col = 0; col < N_VERTICES; col++){
 			if (row != col){

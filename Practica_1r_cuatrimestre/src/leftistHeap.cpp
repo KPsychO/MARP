@@ -65,27 +65,43 @@ void LeftistHeap::insert(std::pair<int, int> elem) {
 	_root = mergeHeaps(_root, newElem);
 }
 
-void LeftistHeap::decreaseKey(int elem, float newDist) {	// Documentado en detalle en la memoria
+void LeftistHeap::decreaseKey(int elem, float newDist) {	// Permite decrementar el valor de la distancia del nodo que contiene al elemento "elem"
+	// Busca en el mapa el valor indicado por "elem"
 	std::unordered_map<int, Node*>::iterator iter = _map->find(elem);
+	// Comprueba que exista en el monticulo
 	if (iter != _map->end()) {
+		// Si se trata de la raiz, decrece el valor correspondiente
 		if (iter->second == _root) {
 			_root->_elem.first = newDist;
-		} else {
+		}
+		// En caso de no ser la raiz, crea un nuevo nodo con los valores apropiados
+		else {
 			Node *aux = new Node(
 					std::make_pair(newDist, iter->second->_elem.second),
-					0, iter->second->_parent,
-					iter->second->_left, iter->second->_right);
+					0,
+					iter->second->_parent,
+					iter->second->_left, 
+					iter->second->_right
+					);
+			// Comprueba si se trata del hijo izquierdo o derecho de su padre
 			if ((aux->_parent->_left->_elem.second == elem)) {
+				// Si se trata del izquierdo, el puntero _left del padre se apunta a NULL
 				aux->_parent->_left = NULL;
+				// Se intercambian los hijos del padre que el derecho no debe ser hijo unico
 				swapChildren(aux->_parent);
 			} else
+				// Si se trata del derecho, el puntero _right del padre se apunta a NULL
 				aux->_parent->_right = NULL;
+			// Perdemos el puntero _parent, descolgando de forma efectiva nuestro nodo a decrementar del monticulo
 			aux->_parent = NULL;
+			// Se indica a nuestros hijos _left y _right que aux es el nuevo nodo padre, ya que es una direccion de memoria distinta
 			if (aux->_left != NULL)
 				aux->_left->_parent = aux;
 			if (aux->_right != NULL)
 				aux->_right->_parent = aux;
+			// Llamamos a mergeHeaps() con la raiz original de nuestro monticulo y el nuevo nodo que hemos descolgado
 			_root = mergeHeaps(_root, aux);
+			// Eliminamos la antigua direccion del nodo del mapa e insertamos la nueva
 			_map->erase(elem);
 			_map->insert(std::make_pair(elem, aux));
 		}
