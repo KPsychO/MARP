@@ -7,10 +7,13 @@
 #include <vector>
 
 /*
- Implementation of a Weighted Undirected Graph using Linked lists.
+ Implementation of a Weighted Directed Graph using Linked lists.
  Each vertex is represented by VertexNode:
  _elem       contains the value of the given node
  _visited    controls if the visited has been visited by any algorithm
+ _nodesPointed controls the nomber of nodes in the list
+ _visited	 stores the result of the dijkstra algorithm, true if visited after the algorithm
+ _parentOnMinPath stores the parent of the note in the minimum path after dijkstra
  _next       pointer to the next VertexNode in the graph
  _edges      pointer to the first EdgeNode of the Vertex
 
@@ -54,17 +57,17 @@ class WDGraph {
 public:
 	VertexNode *_head;
 	int _nVertex;
-	std::unordered_map<int, VertexNode*> *_map; // Stores the current vertex on the graph and a pointer to them in order to insert a new edge in O(1)
-	void addEdge(int src, int dst, float weight); // Adds an EdgeNode from src to dst with the given weight
-	void printGraph(); // Prints the adyacency list for the graph
-	void printGraphvertices(); // Prints all the info of each vertex of the graph
-	void getvertices(std::vector<VertexNode*> &ret); // Returns an array with all the vertices of the graph in it
-	void changeVertexDistance(int e, float newDist); // Changes the distance attribute of the given node to the desired value
-	void changeParent(int e, VertexNode* parent);	// Changes the distance attribute of the given node to the desired value
+	std::unordered_map<int, VertexNode*> *_map; 	// Stores the current vertex on the graph and a pointer to them in order to insert a new edge in O(1)
+	void addEdge(int src, int dst, float weight); 	// Adds an EdgeNode from src to dst with the given weight
+	void printGraph(); 								// Prints the adyacency list for the graph
+	void printGraphvertices(); 						// Prints all the info of each vertex of the graph
+	void getvertices(std::vector<VertexNode*> &ret);// Returns an array with all the vertices of the graph in it
+	void changeVertexDistance(int e, float newDist);// Changes the distance attribute of the given node to the desired value
+	void changeParent(int e, VertexNode* parent);	// Changes the parent attribute of the given node to the desired value
 	void visitVertex(int e);                        // Marks the node as visited
 	void getNeightbours(int e, std::vector<EdgeNode*> &ret); // Returns the neightbours oof the given vertex
-	int getNumberOfNeightbours(int e); // Returns the number of neightbours of the given node
-	VertexNode* getVertex(int e); // Returns the corresponding node to the given element
+	int getNumberOfNeightbours(int e); 				// Returns the number of neightbours of the given node
+	VertexNode* getVertex(int e); 					// Returns the corresponding node to the given element
 	WDGraph();                                      // Constructor
 
 };

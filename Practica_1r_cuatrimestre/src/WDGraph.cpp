@@ -32,6 +32,7 @@ WDGraph::WDGraph() {
 }
 
 void WDGraph::addEdge(int src, int dst, float weight) {
+	// Se encarga de anadir las aristas al grafo, si alguno de los vertices mencionados en la arista no forma parte del grafo, lo anade tambien
 	if (_head == NULL) {
 		EdgeNode *edge1 = new EdgeNode(src, dst, weight, NULL); // Creamos la arista src -> dst
 		VertexNode *aux = new VertexNode(dst, NULL, NULL); // Creamos el vertice dst
@@ -39,7 +40,7 @@ void WDGraph::addEdge(int src, int dst, float weight) {
 		_head->_nodesPointed++;
 		_map->insert(std::make_pair(src, _head));
 		_map->insert(std::make_pair(dst, aux));
-		_nVertex += 2;                            // Aumentamos el # de vertices
+		_nVertex += 2; // Aumentamos el # de vertices
 	} else {
 		EdgeNode *aux = NULL;
 		VertexNode *vAux = NULL;
@@ -67,31 +68,33 @@ void WDGraph::addEdge(int src, int dst, float weight) {
 }
 
 void WDGraph::printGraph() {
+	// DEBUG
 	VertexNode *vertex = _head;
 	for (int i = 0; i < _nVertex; i++) {
-		std::cout << "Adyacency list of: " << vertex->_elem << '\n';
+		std::cerr << "Adyacency list of: " << vertex->_elem << '\n';
 		EdgeNode *edge = vertex->_edges;
 		while (edge) {
-			std::cout << " -> " << edge->_dst << " (" << edge->_weight << ')';
+			std::cerr << " -> " << edge->_dst << " (" << edge->_weight << ')';
 			edge = edge->_next;
 		}
-		std::cout << '\n';
+		std::cerr << '\n';
 		vertex = vertex->_next;
 	}
 }
 
 void WDGraph::printGraphvertices() {
+	// DEBUG
 	VertexNode *vertex = _head;
 	for (int i = 0; i < _nVertex; i++) {
-		std::cout << "Vertex: " << vertex->_elem << '\n';
-		std::cout << "   # of pointed nodes: " << vertex->_nodesPointed << '\n';
-		std::cout << "   visited: "
+		std::cerr << "Vertex: " << vertex->_elem << '\n';
+		std::cerr << "   # of pointed nodes: " << vertex->_nodesPointed << '\n';
+		std::cerr << "   visited: "
 				<< (vertex->_visited ? "True\n" : "False\n");
-		std::cout << "   distance: " << vertex->_dist << '\n';
+		std::cerr << "   distance: " << vertex->_dist << '\n';
 		if (vertex->_parentOnMinPath != NULL)
-			std::cout << "   parentOnShortestPath: "
+			std::cerr << "   parentOnShortestPath: "
 					<< vertex->_parentOnMinPath->_elem << '\n';
-		std::cout << '\n';
+		std::cerr << '\n';
 		vertex = vertex->_next;
 	}
 }
@@ -109,7 +112,7 @@ void WDGraph::changeVertexDistance(int e, float newDist) {
 	if (iter != _map->end()) {
 		iter->second->_dist = newDist;
 	} else {
-		std::cout << e << " is not currently in the graph.\n";
+		std::cerr << e << " is not currently in the graph.\n";
 	}
 }
 
@@ -118,7 +121,7 @@ void WDGraph::changeParent(int e, VertexNode *parent) {
 	if (iter != _map->end()) {
 		iter->second->_parentOnMinPath = parent;
 	} else {
-		std::cout << e << " is not currently in the graph.\n";
+		std::cerr << e << " is not currently in the graph.\n";
 	}
 }
 
@@ -127,7 +130,7 @@ void WDGraph::visitVertex(int e) {
 	if (iter != _map->end()) {
 		iter->second->_visited = 1;
 	} else {
-		std::cout << e << " is not currently in the graph.\n";
+		std::cerr << e << " is not currently in the graph.\n";
 	}
 }
 
@@ -142,7 +145,7 @@ void WDGraph::getNeightbours(int e, std::vector<EdgeNode*> &ret) {
 			aux = aux->_next;
 		}
 	} else {
-		std::cout << e << " is not currently in the graph.\n";
+		std::cerr << e << " is not currently in the graph.\n";
 	}
 }
 
@@ -151,7 +154,7 @@ int WDGraph::getNumberOfNeightbours(int e) {
 	if (iter != _map->end()) {
 		return iter->second->_nodesPointed;
 	} else {
-		std::cout << e << " is not currently in the graph.\n";
+		std::cerr << e << " is not currently in the graph.\n";
 	}
 	return -1;
 }
@@ -161,7 +164,7 @@ VertexNode* WDGraph::getVertex(int e) {
 	if (iter != _map->end()) {
 		return iter->second;
 	} else {
-		std::cout << e << " is not currently in the graph.\n";
+		std::cerr << e << " is not currently in the graph.\n";
 	}
 	return NULL;
 }

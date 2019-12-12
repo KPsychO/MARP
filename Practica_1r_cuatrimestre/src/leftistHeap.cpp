@@ -38,7 +38,6 @@ int LeftistHeap::getMin() {
 }
 
 void LeftistHeap::deleteMin() {
-//	std::cerr << "deleteMin\n";
 	if (!isEmpty()) {
 		_map->erase(_root->_elem.first);
 		Node *aux = _root;
@@ -52,15 +51,13 @@ void LeftistHeap::deleteMin() {
 }
 
 void LeftistHeap::deleteMin(std::pair<float, int> &minElem) {
-	// if (!this->isEmpty()) {
 	minElem = _root->_elem;
 	deleteMin();
-	// }
 }
 
 void LeftistHeap::insert(std::pair<int, int> elem) {
 	if (_map->find(elem.second) != _map->end()) {
-		std::cout << elem.second << " already exists in the heap.\n";
+		std::cerr << elem.second << " already exists in the heap.\n";
 		return;
 	}
 	Node *newElem = new Node(elem);
@@ -68,7 +65,7 @@ void LeftistHeap::insert(std::pair<int, int> elem) {
 	_root = mergeHeaps(_root, newElem);
 }
 
-void LeftistHeap::decreaseKey(int elem, float newDist) {
+void LeftistHeap::decreaseKey(int elem, float newDist) {	// Documentado en detalle en la memoria
 	std::unordered_map<int, Node*>::iterator iter = _map->find(elem);
 	if (iter != _map->end()) {
 		if (iter->second == _root) {
@@ -92,14 +89,12 @@ void LeftistHeap::decreaseKey(int elem, float newDist) {
 			_map->erase(elem);
 			_map->insert(std::make_pair(elem, aux));
 		}
-	} else {
-		std::cout << elem << " not found in the map (decreaseKey()).\n";
 	}
 }
 
 void LeftistHeap::merge(LeftistHeap &b) {
 	if (this == &b)
-		return;     // Can't merge with yourself
+		return;
 	_root = mergeHeaps(_root, b._root);
 	b._root = NULL;
 }
@@ -120,9 +115,9 @@ void LeftistHeap::printHeap() {
 	std::pair<float, int> x;
 	while (!aux.isEmpty()) {
 		aux.deleteMin(x);
-		std::cout << '(' << x.second << ' ' << x.first << ')' << ' ';
+		std::cerr << '(' << x.second << ' ' << x.first << ')' << ' ';
 	}
-	std::cout << '\n';
+	std::cerr << '\n';
 }
 
 LeftistHeap& LeftistHeap::operator =(LeftistHeap &h) {
@@ -145,12 +140,13 @@ Node* LeftistHeap::mergeHeaps(Node *heap1, Node *heap2) {
 	if (heap2 == NULL)
 		return heap1;
 	if (heap1->_elem.first <= heap2->_elem.first) {
-		return MergeRecursive(heap1, heap2); // Ensures heap1 has the smallest root
+		return MergeRecursive(heap1, heap2);
 	}
 	return MergeRecursive(heap2, heap1);
 }
 
 Node* LeftistHeap::MergeRecursive(Node *heap1, Node *heap2) {
+	// Aparte de realizar el merge de forma correcta, se encarga de asignar el padre de cada nodo en cada asignacion
 	if (heap1->_left == NULL) {
 		heap1->_left = heap2;
 		heap2->_parent = heap1;
