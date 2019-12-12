@@ -1,6 +1,8 @@
 #include <iostream>
 #include <ctime>
 #include <chrono>
+#include <cmath>
+
 #include "leftistHeap.h"
 #include "WDGraph.h"
 
@@ -11,12 +13,12 @@ std::vector<EdgeNode*> EdgesToNeightbours;
 LeftistHeap h;
 
 void readGraph(WDGraph &g);
-void createGraph(int N_VERTICES, int MAX_WEIGHT, float EDGE_CHANCE);
+void createGraph(int N_VERTICES, int MAX_WEIGHT, float EDGE_CHANCE, long unsigned int &edges);
 void dijkstra(WDGraph g, int src);
 
 int main(int argc, char **argv) {
-
-    srand(time(NULL));  
+    srand(time(NULL));
+	long unsigned int edges = 0;
     if (argc != 4){
         std::cerr << "Wrong # of arguments\n";
         std::cerr << "Correct arguments are: (int) N_VERTICES, (int) MAX_WEIGHT, (float) EDGE_CHANCE\n";
@@ -27,13 +29,17 @@ int main(int argc, char **argv) {
     std::cerr << "     " << argv[2] << " MAX_WEIGHT\n";
     std::cerr << "     " << std::stod(argv[3])*100 << "% EDGE_CHANCE\n";
 	std::cerr << "-------------------------\n";
+	std::cerr << std::pow(std::stoi(argv[1]), 2)*std::stod(argv[3]) << " expected edges (aprox)\n";
 	// readGraph(g);		// Descomentar para leer el grafo (./dijkstra < inputFile)
-    createGraph(std::stoi(argv[1]), std::stoi(argv[2]), std::stod(argv[3]));	// Comentar si se desea leer el grafo en lugar de generarlo
+    createGraph(std::stoi(argv[1]), std::stoi(argv[2]), std::stod(argv[3]), edges);	// Comentar si se desea leer el grafo en lugar de generarlo
 	// g.printGraph();		// Descomentar para imprimir las listas de adyacencia del grafo generado o leido
+	std::cerr << "Executing dijkstra...\n";
 	auto start = std::chrono::steady_clock::now();
 	dijkstra(g, 0);
 	auto end = std::chrono::steady_clock::now();
 	std::cout << std::chrono::duration<double, std::milli>(end - start).count()	<< "\n";
+	std::cerr << std::chrono::duration<double, std::milli>(end - start).count()	<< " ms - Total time\n";
+	std::cerr << edges/std::chrono::duration<double, std::milli>(end - start).count() << " edges/ms\n";
 	// g.printGraphvertices();	// Descomentar para imprimir los datos de todos los vertices tras la ejecucion del algoritmo
 	return 0;
 }
@@ -85,7 +91,7 @@ void readGraph(WDGraph &g) {
 	}
 }
 
-void createGraph(int N_VERTICES, int MAX_WEIGHT, float EDGE_CHANCE){
+void createGraph(int N_VERTICES, int MAX_WEIGHT, float EDGE_CHANCE, long unsigned int &edges){
 	float r;
     float f;
     for (int row = 0; row < N_VERTICES; row++){
@@ -95,8 +101,11 @@ void createGraph(int N_VERTICES, int MAX_WEIGHT, float EDGE_CHANCE){
 				if (r <= EDGE_CHANCE){
 					f = static_cast <float> (rand()) / static_cast <float> (RAND_MAX);
                     g.addEdge(row, col, f*MAX_WEIGHT);
+					std::cerr.flush();
+					std::cerr << edges++  << " edges generated\r";
                 }
 			}
 		}
 	}
+	std::cerr << '\n';
 }
